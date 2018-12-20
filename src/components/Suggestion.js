@@ -25,7 +25,7 @@ class Suggestion {
 
     // Supprime les suggestions au click sur la page
     document.addEventListener('click', () => {
-      // this.cleanSuggestionsContainer();
+      this.cleanSuggestionsContainer();
     });
   }
 
