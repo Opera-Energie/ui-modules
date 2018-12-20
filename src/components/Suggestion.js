@@ -1,11 +1,11 @@
 class Suggestion {
-  constructor({ inputElement, queryBaseUrl, queryParameter, nbCaractersBeforeTrigger }) {
+  constructor({ inputElement, queryBaseUrl, queryParameter, nbCaractersBeforeTrigger = 3 }) {
     this.inputElement = inputElement;
     this.queryBaseUrl = queryBaseUrl;
     this.queryParameter = queryParameter;
     this.nbCaractersBeforeTrigger = nbCaractersBeforeTrigger;
 
-    this.queryTimeoutTime = 500;
+    this.queryTimeoutDelay = 500;
     this.queryTimeout = false;
 
     this.suggestionsContainerClassName = 'suggestionsContainer';
@@ -99,26 +99,26 @@ class Suggestion {
     }
   }
 
-  query(requestInput) {
+  query(searchTerm) {
     clearTimeout(this.queryTimeout);
 
     this.queryTimeout = setTimeout(() => {
       this.httpRequest = new XMLHttpRequest();
 
       this.httpRequest.onreadystatechange = event => {
-        let current = event.currentTarget;
+        const current = event.currentTarget;
 
         if (current.readyState == 4 && current.status == 200) {
-          let suggestions = JSON.parse(current.response);
+          const suggestions = JSON.parse(current.response);
           this.setSuggestions(suggestions);
         }
       };
 
-      const queryUrl = `${this.queryBaseUrl}?${this.queryParameter}=${requestInput}`;
+      const queryUrl = `${this.queryBaseUrl}?${this.queryParameter}=${searchTerm}`;
 
       this.httpRequest.open('GET', queryUrl, true);
       this.httpRequest.send(false);
-    }, this.queryTimeoutTime);
+    }, this.queryTimeoutDelay);
   }
 
   setSuggestions(suggestions) {
