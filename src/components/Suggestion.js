@@ -162,6 +162,11 @@ class Suggestion {
   cleanSuggestionsContainer() {
     this.suggestionsContainer.innerHTML = '';
   }
+
+  // créé les éléments nécessaires au fonctionnement du script
+  static init(config) {
+    return new Suggestion(config);
+  }
 }
 
 export default Suggestion;
