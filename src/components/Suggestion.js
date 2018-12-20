@@ -5,7 +5,9 @@ class Suggestion {
     queryParameter,
     responsePropertyToGetLabelFrom = 'label',
     responsePropertyToGetValueFrom = 'value',
-    nbCaractersBeforeTrigger = 3
+    nbCaractersBeforeTrigger = 3,
+    suggestionsContainerClassName = 'suggestionsContainer',
+    selectedSuggestionClassName = 'selected'
   }) {
     this.inputElement = inputElement;
     this.queryBaseUrl = queryBaseUrl;
@@ -13,12 +15,12 @@ class Suggestion {
     this.responsePropertyToGetLabelFrom = responsePropertyToGetLabelFrom;
     this.responsePropertyToGetValueFrom = responsePropertyToGetValueFrom;
     this.nbCaractersBeforeTrigger = nbCaractersBeforeTrigger;
+    this.suggestionsContainerClassName = suggestionsContainerClassName;
+    this.selectedSuggestionClassName = selectedSuggestionClassName;
 
     this.queryTimeoutDelay = 500;
     this.queryTimeout = false;
 
-    this.suggestionsContainerClassName = 'suggestionsContainer';
-    this.selectedSuggestionClassName = 'highlighted';
     this.inputElement.setAttribute('autocomplete', 'off');
 
     this.build();
