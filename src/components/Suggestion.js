@@ -1,8 +1,17 @@
 class Suggestion {
-  constructor({ inputElement, queryBaseUrl, queryParameter, nbCaractersBeforeTrigger = 3 }) {
+  constructor({
+    inputElement,
+    queryBaseUrl,
+    queryParameter,
+    responsePropertyToGetLabelFrom = 'label',
+    responsePropertyToGetValueFrom = 'value',
+    nbCaractersBeforeTrigger = 3
+  }) {
     this.inputElement = inputElement;
     this.queryBaseUrl = queryBaseUrl;
     this.queryParameter = queryParameter;
+    this.responsePropertyToGetLabelFrom = responsePropertyToGetLabelFrom;
+    this.responsePropertyToGetValueFrom = responsePropertyToGetValueFrom;
     this.nbCaractersBeforeTrigger = nbCaractersBeforeTrigger;
 
     this.queryTimeoutDelay = 500;
@@ -25,7 +34,7 @@ class Suggestion {
 
     // Supprime les suggestions au click sur la page
     document.addEventListener('click', () => {
-      this.cleanSuggestionsContainer();
+      //this.cleanSuggestionsContainer();
     });
   }
 
@@ -133,8 +142,8 @@ class Suggestion {
 
     suggestions.forEach(suggestion => {
       const li = document.createElement('li');
-      li.innerHTML = suggestion.label;
-      li.dataset.value = suggestion.value;
+      li.innerHTML = suggestion[this.responsePropertyToGetLabelFrom];
+      li.dataset.value = suggestion[this.responsePropertyToGetValueFrom];
 
       li.addEventListener('click', event => {
         this.selectSuggestion(event.currentTarget);
