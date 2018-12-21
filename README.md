@@ -1,20 +1,20 @@
-# Scripts Opéra Énergie
+# Opéra Énergie - UI Modules
 
 Ce projet contient une collection d'outils d'aide à la création d'interface.
 
 ## Installation
 
-Installer le package à l'aide de NPM ou de Yarn :
+Installer le package :
 
 - Avec NPM :
 
 ```javascript
-npm install opera-scripts
+npm install ui-modules
 ```
 
-- Avec Yarn
+- Avec Yarn :
 ```javascript
-yarn add opera-scripts
+yarn add ui-modules
 ```
 
 ## Utilisation
@@ -24,10 +24,10 @@ Les composants de ce projet sont indépendants les uns des autres et peuvent don
 Dans le code, importer le composant à utiliser :
 
 ```javascript
-import { Suggestion } from 'opera-scripts';
+import { Suggestion } from 'ui-modules';
 ```
 
-Certains composants peuvent recevoir des options qui servent d'argument lors de l'instanciation :
+Certains composants peuvent recevoir des options qui servent d'argument lors de l'instanciation, par exemple pour le composant Suggestion :
 
 ```javascript
 const config = {
@@ -64,11 +64,11 @@ Le premier argument à passer au composant lors de son initialisation est un él
 
 La liste des suggestions retournée par le serveur sera convertie en simples balises `<li>`, elles-même inclues dans une balise `<ul>`.
 
-Pour permettre d'appliquer facilement du style, la balise `<ul>` est insérée dans une balise `<div>` qui possède une classe CSS passée dans les options. Si le nom de classe n'est pas précisé, `.suggestionsContainer` sera utilisé.
+Pour permettre, entre autres, d'appliquer facilement du style, la balise `<ul>` est insérée dans une balise `<div>` qui possède une classe CSS passée dans les options. Si le nom de cette classe n'est pas précisé, `.suggestionsContainer` sera utilisé.
 
 Le script injecte également la propriété `autocomplete="off"` à la balise `input` afin d'éviter des conflits éventuels.
 
-Afin de pouvoir récupérer les données des suggestions pour soumettre le formulaire final, le serveur doit ajouter des propriétés à l'objet json retourné. Par défaut ces propriétés sont `value` et `label` mais ces valeurs peuvent être modifiées via les options.
+Afin de pouvoir récupérer les données des suggestions pour soumettre le formulaire final, le serveur doit ajouter des propriétés à l'objet json retourné. Par défaut ces propriétés sont `value` et `label` mais ces valeurs peuvent également être modifiées via les options.
 
 Une fois que le serveur aura répondu à la requête de recherche, le DOM sera modifié :
 
