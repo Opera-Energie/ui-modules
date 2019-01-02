@@ -42,6 +42,6 @@ const config = {
 Suggestion.init(config);
 ```
 
-## Liste des scripts
+## Les modules
 
 [Suggestion](./doc/Suggestion.md)
