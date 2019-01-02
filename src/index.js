@@ -1,1 +1,1 @@
-export { default as Suggestion } from './components/Suggestion';
+export { default as Suggestion } from './components/Suggestion/Suggestion';
