@@ -157,7 +157,11 @@ class Suggestion {
   }
 
   selectSuggestion(selectedSuggestion) {
-    this.inputElement.value = selectedSuggestion.dataset.value;
+    // Affiche le texte de la suggestion sélectionnée
+    this.inputElement.value = selectedSuggestion.textContent;
+
+    // Enregistre la valeur dans le dataset de l'input
+    this.inputElement.dataset.value = selectedSuggestion.dataset.value;
   }
 
   // Vide le container de suggestions
