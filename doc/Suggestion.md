@@ -12,7 +12,7 @@ La liste s'affichera sous le champ de recherche et pourra être parcourue à l'a
 
 Pour initialiser le composant `Suggestion`, il faut lui fournir trois arguments obligatoires :
 
-`Suggestion.init({inputElement, queryBaseUrl, queryParameter});` :
+`Suggestion.init({ inputElement, queryBaseUrl, queryParameter });` :
 
 - `inputElement` : un sélecteur css correspondant au champ de recherche (par exemple `#villes` ou `.region`).
 - `queryBaseUrl` : l'url du serveur qui doit retourner le résultat de la recherche
@@ -23,7 +23,7 @@ Le composant `Suggestion` va créer une balise `<div class=".suggestionsContaine
 _A noter :_
 _le composant `Suggestion` injecte également la propriété `autocomplete="off"` à la balise `input` afin d'éviter des conflits éventuels._
 
-Afin de pouvoir récupérer les données des suggestions pour soumettre le formulaire final, le serveur doit ajouter des propriétés à l'objet json retourné. Par défaut ces propriétés sont `value` et `label` mais ces valeurs peuvent être modifiées via des options.
+Afin que l'utilisateur puisse récupérer les données des suggestions, le serveur doit ajouter une propriété à l'objet json retourné. Par défaut cette propriété est `label` (elle peut être modifiée via l'option `responsePropertyToDisplay`).
 
 Exemple après exécution d'une recherche :
 
@@ -31,28 +31,38 @@ Exemple après exécution d'une recherche :
 <input type="text" id="comments" autocomplete="off">
 <div class="suggestionsContainer">
     <ul>
-        <li data-value="1">id labore ex et quam laborum</li>
-        <li data-value="2">quo vero reiciendis velit similique earum</li>
-        <li data-value="3">odio adipisci rerum aut animi</li>
-        <li data-value="4">alias odio sit</li>
-        <li data-value="5">vero eaque aliquid doloribus et culpa</li>
+        <li class="selected" data-suggestion-id="0">id labore ex et quam laborum</li>
+        <li data-suggestion-id="2">quo vero reiciendis velit similique earum</li>
+        <li data-suggestion-id="3">odio adipisci rerum aut animi</li>
+        <li data-suggestion-id="4">alias odio sit</li>
+        <li data-suggestion-id="5">vero eaque aliquid doloribus et culpa</li>
     </ul>
 </div>
 ```
 
 ### Les options
 
-#### responsePropertyToGetLabelFrom
+#### responsePropertyToDisplay
 
-Il s'agit du nom de la propriété renvoyée par le serveur qui doit contenir le texte à afficher comme suggestion.
+Il s'agit du nom de la propriété de l'objet json renvoyé par le serveur qui doit contenir le texte à afficher comme suggestion.
 
 La valeur par défaut est `label`.
 
-#### responsePropertyToGetValueFrom
-
-Il s'agit du nom de la propriété renvoyée par le serveur qui correspond à la valeur de la suggestion.
-
-La valeur par défaut est `value`.
+Exemple : 
+```json
+{
+    "0": {
+        "label":"Paris",
+        "habitants":"2 200 000"
+        ...
+    },
+    "1": {
+        "label":"Lyon",
+        "habitants":"500 700"
+        ...
+    },
+}
+```
 
 #### nbCaractersBeforeTrigger
 
@@ -62,7 +72,7 @@ La valeur par défaut est `3`.
 
 #### suggestionsContainerClassName
 
-Il s'agit du nom de la classe de l'élément contenant les suggestions. Il est notamment utile pour le style des différents éléments.
+Il s'agit du nom de la classe de l'élément html contenant les suggestions. Il peut notamment être utilisé pour styler les différents éléments.
 
 La valeur par défaut est `suggestionsContainer`.
 
@@ -71,3 +81,37 @@ La valeur par défaut est `suggestionsContainer`.
 Il s'agit du nom de la classe de la suggestion sélectionnée.
 
 La valeur par défaut est `selected`.
+
+### Récupérer les données
+
+Le composant `Suggestion` réagit à deux évènements : le surlignement d'un élément dans la liste des suggestions et la sélection d'une suggestion.
+
+Les évènements à écouter sont respectivement `suggestionHighlighted` et `suggestionSelected`.
+
+Les données retournées par le serveur sont disponibles dans la propriété `suggestion` de l'objet `event`.
+
+## Exemple d'utilisation
+
+```javascript
+import { Suggestion } from 'ui-modules';
+
+const inputElement = document.querySelector('#comments');
+
+inputElement.addEventListener('suggestionHighlighted', (event) => {
+    console.log(event.suggestion);
+});
+
+inputElement.addEventListener('suggestionSelected', (event) => {
+    console.log(event.suggestion);
+});
+
+const config = {
+    inputElement,
+    queryBaseUrl: 'https://jsonplaceholder.typicode.com/comments',
+    queryParameter: 'postId',
+    responsePropertyToDisplay: 'name',
+    nbCaractersBeforeTrigger: 1
+}
+
+Suggestion.init(config);
+```
