@@ -3,8 +3,7 @@ class Suggestion {
     inputElement,
     queryBaseUrl,
     queryParameter,
-    responsePropertyToGetLabelFrom = 'label',
-    responsePropertyToGetValueFrom = 'value',
+    responsePropertyToDisplay = 'label',
     nbCaractersBeforeTrigger = 3,
     suggestionsContainerClassName = 'suggestionsContainer',
     selectedSuggestionClassName = 'selected'
@@ -12,8 +11,7 @@ class Suggestion {
     this.inputElement = inputElement;
     this.queryBaseUrl = queryBaseUrl;
     this.queryParameter = queryParameter;
-    this.responsePropertyToGetLabelFrom = responsePropertyToGetLabelFrom;
-    this.responsePropertyToGetValueFrom = responsePropertyToGetValueFrom;
+    this.responsePropertyToDisplay = responsePropertyToDisplay;
     this.nbCaractersBeforeTrigger = nbCaractersBeforeTrigger;
     this.suggestionsContainerClassName = suggestionsContainerClassName;
     this.selectedSuggestionClassName = selectedSuggestionClassName;
@@ -25,6 +23,9 @@ class Suggestion {
 
     this.build();
     this.keyControls();
+
+    // stocke les données récupérées
+    this.store = [];
   }
 
   build() {
@@ -36,7 +37,7 @@ class Suggestion {
 
     // Supprime les suggestions au click sur la page
     document.addEventListener('click', () => {
-      //this.cleanSuggestionsContainer();
+      this.cleanSuggestionsContainer();
     });
   }
 
@@ -80,33 +81,39 @@ class Suggestion {
   }
 
   navigation(direction) {
-    let highlightedSuggestion = this.suggestionsContainer.querySelectorAll('.' + this.selectedSuggestionClassName)[0];
-    if (undefined !== highlightedSuggestion) {
-      highlightedSuggestion.classList.remove(this.selectedSuggestionClassName);
+    let highlightedSuggestionItem = this.suggestionsContainer.querySelectorAll('.' + this.selectedSuggestionClassName)[0];
+    
+    if (undefined !== highlightedSuggestionItem) {
+      highlightedSuggestionItem.classList.remove(this.selectedSuggestionClassName);
     }
+
     switch (direction) {
       case 'prev':
-        if (undefined === highlightedSuggestion) {
-          highlightedSuggestion = this.suggestionsContainer.querySelectorAll('li:last-child')[0];
-        } else if (null === highlightedSuggestion.previousSibling) {
-          highlightedSuggestion = this.suggestionsContainer.querySelectorAll('li:last-child')[0];
+        if (undefined === highlightedSuggestionItem) {
+          highlightedSuggestionItem = this.suggestionsContainer.querySelectorAll('li:last-child')[0];
+        } else if (null === highlightedSuggestionItem.previousSibling) {
+          highlightedSuggestionItem = this.suggestionsContainer.querySelectorAll('li:last-child')[0];
         } else {
-          highlightedSuggestion = highlightedSuggestion.previousSibling;
+          highlightedSuggestionItem = highlightedSuggestionItem.previousSibling;
         }
         break;
       case 'next':
-        if (undefined === highlightedSuggestion) {
-          highlightedSuggestion = this.suggestionsContainer.querySelectorAll('li:first-child')[0];
-        } else if (null === highlightedSuggestion.nextSibling) {
-          highlightedSuggestion = this.suggestionsContainer.querySelectorAll('li:first-child')[0];
+        if (undefined === highlightedSuggestionItem) {
+          highlightedSuggestionItem = this.suggestionsContainer.querySelectorAll('li:first-child')[0];
+        } else if (null === highlightedSuggestionItem.nextSibling) {
+          highlightedSuggestionItem = this.suggestionsContainer.querySelectorAll('li:first-child')[0];
         } else {
-          highlightedSuggestion = highlightedSuggestion.nextSibling;
+          highlightedSuggestionItem = highlightedSuggestionItem.nextSibling;
         }
         break;
     }
-    if (undefined !== highlightedSuggestion) {
-      highlightedSuggestion.classList.add(this.selectedSuggestionClassName);
-      this.selectSuggestion(highlightedSuggestion);
+
+    if (undefined !== highlightedSuggestionItem) {
+      highlightedSuggestionItem.classList.add(this.selectedSuggestionClassName);
+
+      // récupère les données dans le store
+      const suggestionData = this.store[highlightedSuggestionItem.dataset.suggestionId];
+      this.highlightSuggestion(suggestionData);
     }
   }
 
@@ -142,26 +149,41 @@ class Suggestion {
     const ul = document.createElement('ul');
     this.suggestionsContainer.appendChild(ul);
 
-    suggestions.forEach(suggestion => {
-      const li = document.createElement('li');
-      li.innerHTML = suggestion[this.responsePropertyToGetLabelFrom];
-      li.dataset.value = suggestion[this.responsePropertyToGetValueFrom];
+    this.store = suggestions.map((suggestion, index) => {
+        // créé l'élément html à afficher
+        const li = document.createElement('li');
+        li.innerHTML = suggestion[this.responsePropertyToDisplay];
+        li.dataset.suggestionId = index;
 
-      li.addEventListener('click', event => {
-        this.selectSuggestion(event.currentTarget);
-        this.cleanSuggestionsContainer();
+        li.addEventListener('click', () => {
+          this.selectSuggestion(suggestion);
+          this.cleanSuggestionsContainer();
+        });
+
+        ul.appendChild(li);
+
+        // stocke les suggestions dans store
+        suggestion.suggestionId = index;
+        return suggestion;
       });
-
-      ul.appendChild(li);
-    });
   }
 
-  selectSuggestion(selectedSuggestion) {
-    // Affiche le texte de la suggestion sélectionnée
-    this.inputElement.value = selectedSuggestion.textContent;
+  highlightSuggestion(suggestionData) {
+    // émet un évènement avec les données de la suggestion sélectionnée
+    let event = document.createEvent('Event');
+    event.initEvent('suggestionHighlighted');
+    event.suggestion = suggestionData;
 
-    // Enregistre la valeur dans le dataset de l'input
-    this.inputElement.dataset.value = selectedSuggestion.dataset.value;
+    this.inputElement.dispatchEvent(event);
+  }
+
+  selectSuggestion(suggestionData) {
+    // émet un évènement avec les données de la suggestion sélectionnée
+    let event = document.createEvent('Event');
+    event.initEvent('suggestionSelected');
+    event.suggestion = suggestionData;
+
+    this.inputElement.dispatchEvent(event);
   }
 
   // Vide le container de suggestions
