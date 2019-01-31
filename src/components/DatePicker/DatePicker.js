@@ -24,7 +24,7 @@ class DatePicker {
 
         this.calendar = this.wrapperCalendar.querySelector('.calendar');
 
-        if (useDefaultCss) {
+        if (!useDefaultCss) {
             this.wrapperCalendar.classList.remove('defaultStyle');
         }
 
