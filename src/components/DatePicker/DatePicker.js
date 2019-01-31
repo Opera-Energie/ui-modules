@@ -5,29 +5,37 @@ class DatePicker {
     constructor({
         inputElement,
         useDefaultCss = true,
-        wrapperClass= ''}) {
-        this.inputDateElement = inputElement;
+        wrapperClass= '',
+        dateFormat = 'yyyy-mm-dd'}) {
 
+        this.inputDateElement = inputElement;
+        this.parentNode = this.inputDateElement.parentNode;
+
+        this.allowedDateFormat = ['yyyy-mm-dd', 'dd/mm/yyyy'];
+
+        this.dateFormat = this.allowedDateFormat.includes(dateFormat) ? dateFormat : 'yyyy-mm-dd';
+
+        // transforme le type du champs en type texte
         this.inputDateElement.setAttribute('type', 'text');
-        this.inputDateElement.setAttribute('pattern', '/^(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))$/');
 
         this.listMonth = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
         this.listDay = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 
-        this.parentNode = this.inputDateElement.parentNode;
-
         this.buildStructure();
 
+        // récupération du bouton pour afficher la date du jour
         this.todayButton = this.parentNode.querySelector('.today');
 
         this.wrapperCalendar = document.querySelector('.datePickerContainer');
 
         this.calendar = this.wrapperCalendar.querySelector('.calendar');
 
+        // utilisation du style par defaut ou non
         if (!useDefaultCss) {
             this.wrapperCalendar.classList.remove('defaultStyle');
         }
 
+        // ajout d'une class custom
         if (wrapperClass) {
             this.wrapperCalendar.classList.add(wrapperClass);
         }
@@ -36,21 +44,28 @@ class DatePicker {
 
         this.yearNav = this.wrapperCalendar.querySelectorAll('.yearListWrapper a');
 
+        let initialDate = '';
+        if (this.inputDateElement.value === '') {
+            initialDate = new Date();
+        } else {
+            initialDate = new Date(this.inputDateElement.value);
+        }
+
         this.currentDate = new Date();
-        this.currentDay = this.currentDate.getDate();
-        this.currentMonth = this.currentDate.getMonth();
-        this.currentYear = this.currentDate.getFullYear();
 
-        this.selectedDate = this.currentDate;
-        this.selectedYear = parseInt(this.currentYear);
-        this.selectedMonth = parseInt(this.currentMonth);
-        this.selectedDay = parseInt(this.currentDay);
+        // set la date initiale
+        this.initalDate = initialDate;
+        this.selectedDate = this.initalDate;
+        this.selectedYear = parseInt(this.initalDate.getFullYear());
+        this.selectedMonth = parseInt(this.initalDate.getMonth());
+        this.selectedDay = parseInt(this.initalDate.getDate());
 
+        // écoute l'event du pour retourner à la date du jour
         this.todayButton.addEventListener('click', () => {
             this.selectedDate = this.currentDate;
-            this.selectedYear = parseInt(this.currentYear);
-            this.selectedMonth = parseInt(this.currentMonth);
-            this.selectedDay = parseInt(this.currentDay);
+            this.selectedYear = parseInt(this.currentDate.getFullYear());
+            this.selectedMonth = parseInt(this.initalDate.getMonth());
+            this.selectedDay = parseInt(this.currentDate.getDate());
 
             this.setNewSelectedDate();
             this.constructMonthList();
@@ -94,6 +109,7 @@ class DatePicker {
                 if (!self.wrapperCalendar.contains(target)) {
                     self.calendar.style.display = 'none';
                     document.removeEventListener('click', clickOutChecking);
+                    document.removeEventListener('keyup', actionOnKeyPressed);
                 }
 
             });
@@ -102,6 +118,7 @@ class DatePicker {
         this.inputDateElement.addEventListener('change', () => {
             this.updateDate();
             this.calendar.style.display = 'none';
+            document.removeEventListener('keyup', actionOnKeyPressed);
         });
     }
 
@@ -328,7 +345,14 @@ class DatePicker {
         let month = ((this.selectedMonth+1) < 10) ? '0'+(this.selectedMonth+1) : (this.selectedMonth+1);
         let day = (this.selectedDay < 10) ? '0'+ this.selectedDay.toString() : this.selectedDay;
 
-        return day + '/' + month + '/' + year;
+        switch (this.dateFormat) {
+            case 'yyyy-mm-dd' :
+                return year + '-' + month + '-' + day;
+                break;
+            case 'dd/mm/yyyy' :
+                return day + '/' + month + '/' + year;
+                break;
+        }
     }
 
     navigateAction() {

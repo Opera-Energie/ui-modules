@@ -10,9 +10,9 @@
 }
 
 .datePickerContainer.defaultStyle {
-    padding:20px;
     width:fit-content;
     position:relative;
+    z-index:1000;
 }
 
 .datePickerContainer.defaultStyle .calendar {
@@ -39,6 +39,11 @@ ANNEES
 .datePickerContainer.defaultStyle .calendar .year .yearListWrapper {
     overflow-y:hidden;
 }
+
+.datePickerContainer.defaultStyle .calendar .year .yearListWrapper .yearList {
+    margin:0;
+}
+
 .datePickerContainer.defaultStyle .calendar .year .yearListWrapper a {
     padding:3px 10px;
     cursor:pointer;
@@ -99,6 +104,7 @@ MOIS
     display:flex;
     flex-direction:column;
     justify-content:space-between;
+    margin:0;
 }
 
 /*
@@ -112,16 +118,20 @@ JOURS
 
 .datePickerContainer.defaultStyle .calendar .day .resumeDate {
     justify-content: space-between;
-    padding:15px;
+    padding:10px;
     position:absolute;
     width:100%;
     left:0;
     top:0;
     height:80px;
     background:#387eff;
-    color:#fff;
 }
 
+.datePickerContainer.defaultStyle .calendar .day .resumeDate span {
+    color:#fff;
+    margin:0;
+    font-weight:300;
+}
 
 .datePickerContainer.defaultStyle .calendar .day .resumeDate .today {
     position:absolute;
@@ -132,6 +142,7 @@ JOURS
     align-items:center;
     text-decoration:underline;
     cursor:pointer;
+    color:#fff;
 }
 
 .datePickerContainer.defaultStyle .calendar .day .resumeDate .today .icon{
@@ -142,6 +153,13 @@ JOURS
 .datePickerContainer.defaultStyle .calendar .day .resumeDate .fullDate{
     font-size:22px;
     margin-top:8px;
+}
+
+.datePickerContainer.defaultStyle .calendar .day .resumeDate .fullDate span {
+    font-size:20px;
+    margin-top:8px;
+    color:#fff;
+    display:inline;
 }
 
 .datePickerContainer.defaultStyle .calendar .day .dayListWrapper {
