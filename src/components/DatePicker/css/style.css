@@ -1,0 +1,176 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    box-sizing: border-box;
+    line-height:1;
+    user-select:none;
+}
+
+.datePickerContainer.defaultStyle {
+    padding:20px;
+    width:fit-content;
+    position:relative;
+}
+
+.datePickerContainer.defaultStyle .calendar {
+    width:550px;
+    padding:20px;
+    display:none;
+    justify-content:space-between;
+    position:absolute;
+    background-color:#fff;
+    box-shadow:0 1px 5px rgb(100,100,100);
+    border-radius:3px;
+}
+
+/*
+ANNEES
+*/
+.datePickerContainer.defaultStyle .calendar .year {
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+.datePickerContainer.defaultStyle .calendar .year .yearListWrapper {
+    overflow-y:hidden;
+}
+.datePickerContainer.defaultStyle .calendar .year .yearListWrapper a {
+    padding:3px 10px;
+    cursor:pointer;
+    height:20px;
+    border-radius:3px;
+    background-image:url('../img/arrow.png');
+    background-position:50%;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:flex;
+    margin-top:10px;
+}
+.datePickerContainer.defaultStyle .calendar .year .yearListWrapper a.less {
+    transform:rotateX(180deg);
+    margin-top:0;
+    margin-bottom:10px;
+}
+.datePickerContainer.defaultStyle .calendar .year .yearListWrapper nav:hover {}
+.datePickerContainer.defaultStyle .calendar .month .monthListWrapper .monthList li,
+.datePickerContainer.defaultStyle .calendar .year .yearListWrapper .yearList li {
+    list-style:none;
+    line-height:25px;
+    padding:0 10px;
+}
+
+.datePickerContainer.defaultStyle .calendar .year .yearListWrapper .yearList li {
+    text-align:center;
+}
+.datePickerContainer.defaultStyle .calendar .month .monthListWrapper .monthList li:hover,
+.datePickerContainer.defaultStyle .calendar .year .yearListWrapper .yearList li:hover,
+.datePickerContainer.defaultStyle .calendar .day .dayListWrapper .dayList tbody tr td.days:hover {
+    cursor:pointer;
+    background-color:rgba(56,126,255,.6);
+    color:#fff;
+}
+.datePickerContainer.defaultStyle .calendar .month .monthListWrapper .monthList li.selected,
+.datePickerContainer.defaultStyle .calendar .year .yearListWrapper .yearList li.selected,
+.datePickerContainer.defaultStyle .calendar .day .dayListWrapper .dayList tbody tr td.selected{
+    color:#fff;
+    background-color:#387EFF;
+}
+
+.datePickerContainer.defaultStyle .calendar .year .yearListWrapper .yearList li.hide {
+    display:none;
+}
+
+/*
+MOIS
+*/
+.datePickerContainer.defaultStyle .calendar .month {
+    width:100px;
+}
+.datePickerContainer.defaultStyle .calendar .month .monthListWrapper {
+    height:100%;
+}
+.datePickerContainer.defaultStyle .calendar .month .monthListWrapper .monthList {
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+/*
+JOURS
+*/
+.datePickerContainer.defaultStyle .calendar .day {
+    background-color:rgb(240,240,240);
+    padding:10px;
+    position:relative;
+}
+
+.datePickerContainer.defaultStyle .calendar .day .resumeDate {
+    justify-content: space-between;
+    padding:15px;
+    position:absolute;
+    width:100%;
+    left:0;
+    top:0;
+    height:80px;
+    background:#387eff;
+    color:#fff;
+}
+
+
+.datePickerContainer.defaultStyle .calendar .day .resumeDate .today {
+    position:absolute;
+    top:10px;
+    right:7px;
+    font-size:12px;
+    display:flex;
+    align-items:center;
+    text-decoration:underline;
+    cursor:pointer;
+}
+
+.datePickerContainer.defaultStyle .calendar .day .resumeDate .today .icon{
+    width:12px;
+    margin-left:5px;
+}
+
+.datePickerContainer.defaultStyle .calendar .day .resumeDate .fullDate{
+    font-size:22px;
+    margin-top:8px;
+}
+
+.datePickerContainer.defaultStyle .calendar .day .dayListWrapper {
+    margin-top:85px;
+}
+.datePickerContainer.defaultStyle .calendar .day .dayListWrapper .dayList {}
+.datePickerContainer.defaultStyle .calendar .day .dayListWrapper .dayList thead {}
+.datePickerContainer.defaultStyle .calendar .day .dayListWrapper .dayList thead tr {}
+.datePickerContainer.defaultStyle .calendar .day .dayListWrapper .dayList thead tr th {
+    height:40px;
+    width:30px;
+    text-align:center;
+    line-height:20px;
+}
+
+.datePickerContainer.defaultStyle .calendar .day .dayListWrapper .dayList thead tr th.selected {
+    color:#387EFF;
+}
+.datePickerContainer.defaultStyle .calendar .day .dayListWrapper .dayList thead tr th.selected:after {
+    display:block;
+    content:'.';
+    line-height:5px;
+}
+
+.datePickerContainer.defaultStyle .calendar .day .dayListWrapper .dayList tbody tr {}
+.datePickerContainer.defaultStyle .calendar .day .dayListWrapper .dayList tbody tr td {
+    height:30px;
+    width:30px;
+    text-align:center;
+    line-height:30px;
+    border-radius:50%;
+}
