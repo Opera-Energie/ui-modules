@@ -17,5 +17,8 @@
     "eslint": "^5.10.0",
     "parcel": "^1.12.3",
     "prettier": "^1.15.3"
+  },
+  "dependencies": {
+    "css": "^2.2.4"
   }
 }
